@@ -31,6 +31,7 @@ desde la raíz del proyecto:
 -mkdir test_files
 
 results/       # Guarda los archivos CSV con los resultados
+
 test_files/    # Guarda los archivos usados para pruebas de disco
 
 
