@@ -1,0 +1,17 @@
+# Compilados de C
+*.o
+*.out
+src/benchmark 
+
+# Archivos temporales y de sistema
+.DS_Store
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
+
+# Datos de prueba
+*.bin
+*.dat
+test_files/
