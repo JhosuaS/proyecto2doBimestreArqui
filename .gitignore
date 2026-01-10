@@ -1,6 +1,6 @@
 # Compilados de C
-*.o
-*.out
+src/*.o
+src/*.out
 src/benchmark 
 
 # Archivos temporales y de sistema
