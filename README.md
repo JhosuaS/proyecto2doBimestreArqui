@@ -1,42 +1,14 @@
-# Proyecto Arqui: Benchmark de Memoria y Disco
+# Proyecto Arquitectura de Computadores : Benchmark de Memoria y Buses
 
 Este proyecto sirve para analizar el rendimiento de la memoria y del disco de una computadora.
 Se realizan pruebas para comparar el acceso a **caché, RAM y disco**, usando programas en **C**
 y gráficos en **Python**.
 El proyecto se ejecuta en un entorno Linux, recomendado mediante **WSL**.
 
----
 
-## Objetivo del Proyecto
 
-El objetivo es medir cómo cambia el tiempo de acceso a los datos cuando:
-- Se accede a la memoria de forma ordenada
-- Se accede a la memoria con saltos grandes
-- Se escriben datos directamente en el disco
-
-Esto permite entender mejor la diferencia entre caché, RAM y disco.
-
----
-
-## Estructura del Proyecto
-
-src/
-├── main_benchmark.c        # Archivo principal del programa
-├── cache_benchmark.c      # Pruebas de caché y memoria RAM
-├── cache_benchmark.h
-├── disk_benchmark.c       # Pruebas de escritura en disco
-├── disk_benchmark.h
-├── plots.py               # Script para graficar resultados
----
-Durante la ejecución se usan estas carpetas:
-
-results/       # Guarda los archivos CSV con los resultados
-test_files/    # Guarda los archivos usados para pruebas de disco
-
-IMPORTANTE:
-Estas carpetas deben crearse manualmente antes de ejecutar el programa.
----
 ## Requisitos
+
 
 Para ejecutar el proyecto se necesita:
 
@@ -45,18 +17,25 @@ Para ejecutar el proyecto se necesita:
 -GCC para compilar en C (sudo apt install build-essential)
 
 -Python 3 y librerías necesarias (pip install -r requirements.txt)
----
+
+
 
 ## Preparación del Proyecto 
+
 
 Antes de ejecutar el programa, crea manualmente las carpetas necesarias
 desde la raíz del proyecto:
 
 -mkdir results
 -mkdir test_files
----
+
+results/       # Guarda los archivos CSV con los resultados
+test_files/    # Guarda los archivos usados para pruebas de disco
+
+
 
 ## Compilación
+
 
 Desde la carpeta principal del proyecto, ejecuta:
 
@@ -64,9 +43,10 @@ make
 
 Esto generará el ejecutable en src/benchmark.
 
+
+
 ## Ejecución
 
----
 
 El programa se ejecuta desde la terminal usando argumentos.
 
@@ -88,7 +68,7 @@ Ejemplo:
 
 Este ejemplo prueba tamaños desde 4 KB hasta 512 MB.
 
----
+
 
 ##Autores
 
