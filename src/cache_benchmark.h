@@ -1,5 +1,5 @@
-#ifndef MEM_CACHE_H
-#define MEM_CACHE_H
+#ifndef CACHE_BENCHMARK_H
+#define CACHE_BENCHMARK_H
 
 #include <stddef.h>
 

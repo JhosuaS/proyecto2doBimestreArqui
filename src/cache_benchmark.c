@@ -1,4 +1,6 @@
 #define _GNU_SOURCE
+#define CACHELINE 64
+
 #include "mem_cache.h"
 #include <stdio.h>
 #include <stdint.h>
@@ -6,7 +8,7 @@
 #include <string.h>
 #include <time.h>
 
-#define CACHELINE 64
+
 
 static inline uint64_t tiempo_ns() {
     struct timespec ts;

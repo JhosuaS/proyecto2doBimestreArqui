@@ -10,7 +10,7 @@
 #include <time.h>
 #include <unistd.h>
 
-int main(int argc, char *argv[]) {
+int run_disk_benchmark() {
     void *mem_ptr = NULL;
     struct timespec start, end;
     double time_taken;
