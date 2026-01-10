@@ -1,7 +1,7 @@
 #define _GNU_SOURCE
 #define CACHELINE 64
 
-#include "mem_cache.h"
+#include "cache_benchmark.h"
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
