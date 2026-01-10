@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
     
     if(strcmp(argv[1], "disk") == 0) {
         printf("Ejecutando benchmark de disco...\n");
-        return run_disk_benchmark("test_files/test_file1.bin", 1024 * 1024 * 100, "results/disk_results.csv");
+        run_disk_benchmark("test_files/test_file1.bin", 1024 * 1024 * 100, "results/disk_results.csv");
     } else if (strcmp(argv[1], "cache") == 0) {
         printf("Ejecutando benchmark de caché...\n");
         run_mem_cache_bench("results/cache_results.csv", 1024, 1024*1024*10, 2, 1000);

@@ -25,7 +25,7 @@ void run_disk_benchmark(const char *filename, size_t file_size, const char *csv_
     f = fopen(csv_filename, "a");
     if(f) {
         if(write_header) {
-            fprintf(f, "operacion, tamano_bytes, tiempo_seg, throughput_mbs\n");
+            fprintf(f, "operacion,tamano_bytes,tiempo_seg,throughput_mbs\n");
             write_header = 0;
         }
     } else {
@@ -51,7 +51,7 @@ void run_disk_benchmark(const char *filename, size_t file_size, const char *csv_
     clock_gettime(CLOCK_MONOTONIC, &end);
 
     time_taken = (end.tv_sec - start.tv_sec) + ((end.tv_nsec - start.tv_nsec) / 1000000000.0);
-    fprintf(f, "write, %zu, %f, %f\n", file_size, time_taken, (file_size / (1024.0 * 1024.0)) / time_taken);
+    fprintf(f, "write,%zu,%f,%f\n", file_size, time_taken, (file_size / (1024.0 * 1024.0)) / time_taken);
     
     fclose(f);
     close(fd);
