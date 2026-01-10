@@ -1,4 +1,4 @@
-# Proyecto Arquitectura de Computadores : Benchmark de Memoria y Buses
+## Proyecto Arquitectura de Computadores : Benchmark de Memoria y Buses
 
 Este proyecto sirve para analizar el rendimiento de la memoria y del disco de una computadora.
 Se realizan pruebas para comparar el acceso a **caché, RAM y disco**, usando programas en **C**
@@ -27,6 +27,7 @@ Antes de ejecutar el programa, crea manualmente las carpetas necesarias
 desde la raíz del proyecto:
 
 -mkdir results
+
 -mkdir test_files
 
 results/       # Guarda los archivos CSV con los resultados
@@ -50,19 +51,19 @@ Esto generará el ejecutable en src/benchmark.
 
 El programa se ejecuta desde la terminal usando argumentos.
 
-Ejecutar prueba de disco:
+-Ejecutar prueba de disco:
 
 ./benchmark disk <tamano_archivo>
 
-Ejemplo:
+-Ejemplo:
 
 ./benchmark disk 104857600
 
-Ejecutar prueba de caché y memoria:
+-Ejecutar prueba de caché y memoria:
 
 ./benchmark cache <min_bytes> <max_bytes> <factor> <accesos>
 
-Ejemplo:
+-Ejemplo:
 
 ./benchmark cache 4096 536870912 2 30000000
 
@@ -70,16 +71,16 @@ Este ejemplo prueba tamaños desde 4 KB hasta 512 MB.
 
 
 
-##Autores
+## Autores
+
 
 Grupo 3 – Arquitectura de Computadores
 
 -Jair Lezcano
 
--César Ávila
+-Cesar Ávila
 
 -Edison Ogoganaga
 
 -Jhosua Saá
 
-Ismael Ávila
