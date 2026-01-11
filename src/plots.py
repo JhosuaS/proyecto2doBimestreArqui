@@ -20,7 +20,7 @@ if not CACHE_CSV.exists():
 
 disk_exists = DISK_CSV.exists()
 if not disk_exists:
-    print("⚠ No existe disk_results.csv")
+    print("No existe disk_results.csv")
 
 # =========================
 # CACHE
