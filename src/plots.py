@@ -87,7 +87,7 @@ if disk_exists:
     tam_disk_mb = disk_data["f1"].astype(float) / (1024 * 1024)
     throughput_disk = disk_data["f3"].astype(float)
 
-    # 🔑 ORDENAR POR TAMAÑO
+    #ORDENAR POR TAMAÑO
     idx = np.argsort(tam_disk_mb)
     tam_disk_mb = tam_disk_mb[idx]
     throughput_disk = throughput_disk[idx]
