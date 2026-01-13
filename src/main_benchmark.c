@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
     if (argc < 2) {
         printf("Uso:\n");
         printf("  %s disk\n", argv[0]);
-        printf("  %s cache min max factor accesos\n", argv[0]);
+        printf("  %s cache\n", argv[0]);
         return EXIT_FAILURE;
     }
 
@@ -25,23 +25,18 @@ int main(int argc, char *argv[]) {
             run_disk_benchmark(
                 "test_files/test_file1.bin",
                 size_bytes,
-                "test_files/disk_results.csv"
+                "results/disk_results.csv"
             );
         }
 
     } else if (strcmp(argv[1], "cache") == 0) {
 
-        if (argc != 6) {
-            printf("Uso: %s cache min max factor accesos\n", argv[0]);
-            return EXIT_FAILURE;
-        }
-
         run_mem_cache_bench(
             "results/cache_results.csv",
-            atoi(argv[2]),
-            atoi(argv[3]),
-            atoi(argv[4]),
-            atoi(argv[5])
+            4 * 1024,
+            64 * 1024 * 1024,
+            2,
+            64000000
         );
 
     } else {

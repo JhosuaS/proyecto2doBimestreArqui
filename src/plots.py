@@ -7,7 +7,7 @@ from pathlib import Path
 # =========================
 SRC_DIR = Path(__file__).parent
 PROJECT_DIR = SRC_DIR.parent
-TEST_FILES = PROJECT_DIR / "test_files"
+TEST_FILES = PROJECT_DIR / "results"
 
 CACHE_CSV = TEST_FILES / "cache_results.csv"
 DISK_CSV = TEST_FILES / "disk_results.csv"
@@ -68,7 +68,8 @@ plt.title("Benchmark de Cache")
 plt.grid(True, which="both", linestyle="--", alpha=0.6)
 plt.legend()
 plt.tight_layout()
-plt.show()
+plt.savefig("results/cache_benchmark.png")
+print("Gráfica de Cache guardada en results/cache_benchmark.png")
 
 # =========================
 # DISK (FRECUENCIA)
@@ -111,4 +112,5 @@ if disk_exists:
     plt.grid(True, linestyle="--", alpha=0.6)
     plt.legend()
     plt.tight_layout()
-    plt.show()
+    plt.savefig("results/disk_benchmark.png")
+    print("Gráfica de Disk guardada en results/disk_benchmark.png")

@@ -16,3 +16,7 @@ __pycache__/
 *.dat
 test_files/
 results/
+
+# Configuración de
+Dockerfile
+docker-compose.yml
