@@ -1,116 +1,190 @@
-import numpy as np
-import matplotlib.pyplot as plt
+
+import argparse
 from pathlib import Path
 
-# =========================
-# RUTAS
-# =========================
-SRC_DIR = Path(__file__).parent
-PROJECT_DIR = SRC_DIR.parent
-TEST_FILES = PROJECT_DIR / "results"
+import numpy as np
+import matplotlib.pyplot as plt
 
-CACHE_CSV = TEST_FILES / "cache_results.csv"
-DISK_CSV = TEST_FILES / "disk_results.csv"
 
-# =========================
-# VERIFICACIONES
-# =========================
-if not CACHE_CSV.exists():
-    raise FileNotFoundError("No existe cache_results.csv")
-
-disk_exists = DISK_CSV.exists()
-if not disk_exists:
-    print("No existe disk_results.csv")
-
-# =========================
-# CACHE
-# =========================
-cache_data = np.genfromtxt(
-    CACHE_CSV,
-    delimiter=",",
-    skip_header=1,
-    dtype=None,
-    encoding="utf-8"
-)
-cache_data = np.atleast_1d(cache_data)
-
-tam_seq_cache = np.array(
-    [row[2] for row in cache_data if row[1] == "secuencial"],
-    dtype=float
-)
-lat_seq_cache = np.array(
-    [row[4] for row in cache_data if row[1] == "secuencial"],
-    dtype=float
-)
-
-tam_salto_cache = np.array(
-    [row[2] for row in cache_data if row[1] == "saltos"],
-    dtype=float
-)
-lat_salto_cache = np.array(
-    [row[4] for row in cache_data if row[1] == "saltos"],
-    dtype=float
-)
-
-# =========================
-# GRÁFICA CACHE
-# =========================
-plt.figure(figsize=(10, 6))
-
-plt.plot(tam_seq_cache, lat_seq_cache, marker="o", label="Cache Secuencial")
-plt.plot(tam_salto_cache, lat_salto_cache, marker="s", label="Cache Saltos")
-
-plt.xscale("log")
-plt.yscale("log")
-plt.xlabel("Tamaño de Bloque (bytes)")
-plt.ylabel("Latencia (ns)")
-plt.title("Benchmark de Cache")
-plt.grid(True, which="both", linestyle="--", alpha=0.6)
-plt.legend()
-plt.tight_layout()
-plt.savefig("results/cache_benchmark.png")
-print("Gráfica de Cache guardada en results/cache_benchmark.png")
-
-# =========================
-# DISK (FRECUENCIA)
-# =========================
-if disk_exists:
-    disk_data = np.genfromtxt(
-        DISK_CSV,
+# -------------------------
+# LECTURA DE CSV (CACHE)
+# -------------------------
+def read_cache_csv(cache_csv: Path):
+    """
+    Formato esperado (igual a tu C):
+    tipo,patron,tamano_bytes,salto_bytes,ns_por_acceso
+    Ej:
+    mem,secuencial,4096,0,1.900
+    mem,saltos,4096,4096,10.200
+    """
+    data = np.genfromtxt(
+        cache_csv,
         delimiter=",",
         skip_header=1,
         dtype=None,
-        encoding="utf-8"
+        encoding="utf-8",
+        invalid_raise=False
     )
-    disk_data = np.atleast_1d(disk_data)
+    data = np.atleast_1d(data)
 
-    # bytes → MB
-    tam_disk_mb = disk_data["f1"].astype(float) / (1024 * 1024)
-    throughput_disk = disk_data["f3"].astype(float)
+ 
+    tam_seq = np.array([row[2] for row in data if str(row[1]).strip() == "secuencial"], dtype=float)
+    lat_seq = np.array([row[4] for row in data if str(row[1]).strip() == "secuencial"], dtype=float)
 
-    #ORDENAR POR TAMAÑO
-    idx = np.argsort(tam_disk_mb)
-    tam_disk_mb = tam_disk_mb[idx]
-    throughput_disk = throughput_disk[idx]
+    tam_salt = np.array([row[2] for row in data if str(row[1]).strip() == "saltos"], dtype=float)
+    lat_salt = np.array([row[4] for row in data if str(row[1]).strip() == "saltos"], dtype=float)
 
-    # =========================
-    # GRÁFICA DISK
-    # =========================
+    return tam_seq, lat_seq, tam_salt, lat_salt
+
+
+# -------------------------
+# LECTURA DE CSV (DISK)
+# -------------------------
+def read_disk_csv(disk_csv: Path):
+    """
+    Formato esperado (igual a tu C):
+    operacion,tamano_bytes,tiempo_seg,throughput_mbs
+    Ej:
+    write,104857600,0.123456,850.12
+    """
+    data = np.genfromtxt(
+        disk_csv,
+        delimiter=",",
+        skip_header=1,
+        dtype=None,
+        encoding="utf-8",
+        invalid_raise=False
+    )
+    data = np.atleast_1d(data)
+
+    
+    tam_mb = data["f1"].astype(float) / (1024.0 * 1024.0)
+    thr = data["f3"].astype(float)
+
+    
+    idx = np.argsort(tam_mb)
+    return tam_mb[idx], thr[idx]
+
+
+# -------------------------
+# GRAFICAR CACHE
+# -------------------------
+def plot_cache(cache_csv: Path, outdir: Path, filename: str):
+    tam_seq, lat_seq, tam_salt, lat_salt = read_cache_csv(cache_csv)
+
+    if tam_seq.size == 0 and tam_salt.size == 0:
+        print(f"[CACHE] No hay datos válidos en {cache_csv}")
+        return
+
     plt.figure(figsize=(10, 6))
+    if tam_seq.size:
+        plt.plot(tam_seq, lat_seq, marker="o", label="Secuencial")
+    if tam_salt.size:
+        plt.plot(tam_salt, lat_salt, marker="s", label="Saltos (stride)")
 
-    plt.plot(
-        tam_disk_mb,
-        throughput_disk,
-        marker="o",
-        linestyle="-",
-        label="Disk Secuencial"
-    )
+    plt.xscale("log")
+    plt.yscale("log")
+    plt.xlabel("Tamaño del bloque (bytes)")
+    plt.ylabel("Latencia (ns por acceso)")
+    plt.title("Benchmark de Caché / Memoria")
+    plt.grid(True, which="both", linestyle="--", alpha=0.6)
+    plt.legend()
+    plt.tight_layout()
 
-    plt.xlabel("Tamaño del Archivo (MB)")
+    outdir.mkdir(parents=True, exist_ok=True)
+    outpath = outdir / filename
+    plt.savefig(outpath, dpi=200)
+    plt.close()
+    print(f"[CACHE] Gráfica guardada en: {outpath}")
+
+
+# -------------------------
+# GRAFICAR DISK
+# -------------------------
+def plot_disk(disk_csv: Path, outdir: Path, filename: str):
+    tam_mb, thr = read_disk_csv(disk_csv)
+
+    if tam_mb.size == 0:
+        print(f"[DISK] No hay datos válidos en {disk_csv}")
+        return
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(tam_mb, thr, marker="o", linestyle="-", label="Write secuencial")
+    plt.xlabel("Tamaño del archivo (MB)")
     plt.ylabel("Throughput (MB/s)")
-    plt.title("Benchmark de Disk (Frecuencia)")
+    plt.title("Benchmark de Disco")
     plt.grid(True, linestyle="--", alpha=0.6)
     plt.legend()
     plt.tight_layout()
-    plt.savefig("results/disk_benchmark.png")
-    print("Gráfica de Disk guardada en results/disk_benchmark.png")
+
+    outdir.mkdir(parents=True, exist_ok=True)
+    outpath = outdir / filename
+    plt.savefig(outpath, dpi=200)
+    plt.close()
+    print(f"[DISK] Gráfica guardada en: {outpath}")
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Genera gráficas de cache/memoria y disco a partir de CSV (ideal para Docker)."
+    )
+
+    # Parámetros 
+    parser.add_argument(
+        "--cache-csv",
+        type=str,
+        default="results/cache_results.csv",
+        help="Ruta al CSV de cache (default: results/cache_results.csv)"
+    )
+    parser.add_argument(
+        "--disk-csv",
+        type=str,
+        default="results/disk_results.csv",
+        help="Ruta al CSV de disk (default: results/disk_results.csv)"
+    )
+    parser.add_argument(
+        "--outdir",
+        type=str,
+        default="results",
+        help="Carpeta donde se guardan las imágenes (default: results)"
+    )
+    parser.add_argument(
+        "--mode",
+        choices=["all", "cache", "disk"],
+        default="all",
+        help="Qué graficar: all, cache o disk (default: all)"
+    )
+    parser.add_argument(
+        "--cache-out",
+        type=str,
+        default="cache_benchmark.png",
+        help="Nombre del PNG de cache (default: cache_benchmark.png)"
+    )
+    parser.add_argument(
+        "--disk-out",
+        type=str,
+        default="disk_benchmark.png",
+        help="Nombre del PNG de disk (default: disk_benchmark.png)"
+    )
+
+    args = parser.parse_args()
+
+    cache_csv = Path(args.cache_csv)
+    disk_csv = Path(args.disk_csv)
+    outdir = Path(args.outdir)
+
+    if args.mode in ("all", "cache"):
+        if not cache_csv.exists():
+            raise FileNotFoundError(f"No existe el CSV de cache: {cache_csv}")
+        plot_cache(cache_csv, outdir, args.cache_out)
+
+    
+    if args.mode in ("all", "disk"):
+        if not disk_csv.exists():
+            print(f"[DISK] Aviso: No existe el CSV de disk: {disk_csv} (se omite la gráfica de disco)")
+        else:
+            plot_disk(disk_csv, outdir, args.disk_out)
+
+
+if __name__ == "__main__":
+    main()
