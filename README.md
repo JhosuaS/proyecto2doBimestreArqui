@@ -40,15 +40,19 @@ Esto generará el ejecutable en src/benchmark.
 ## Ejecución
 
 
-El programa se ejecuta desde la terminal.
+El programa se ejecuta desde la terminal usando argumentos.
 
 - Ejecutar prueba de disco:
 
-`./benchmark disk`
+`./benchmark disk <tamano_archivo>`
+
+**Ejemplo:**
+
+`./benchmark disk 104857600`
 
 - Ejecutar prueba de caché y memoria:
 
-`./benchmark cache`
+`./benchmark cache <min_bytes> <max_bytes> <factor> <accesos>`
 
 >Ambas pruebas se realizan para tamaños predefinidos dentro de los programas.
 
