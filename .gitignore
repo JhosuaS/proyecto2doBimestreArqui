@@ -10,7 +10,6 @@ src/benchmark
 # Python
 __pycache__/
 *.pyc
-
 # Datos de prueba
 *.bin
 *.dat
@@ -18,5 +17,4 @@ test_files/
 results/
 
 # Configuración de
-Dockerfile
 docker-compose.yml
