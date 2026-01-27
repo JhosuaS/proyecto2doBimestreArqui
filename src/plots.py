@@ -13,7 +13,7 @@ if len(sys.argv) < 2:
 modo = sys.argv[1]
 
 BASE_DIR = Path(__file__).parent.parent
-BIN = BASE_DIR / "main_benchmark"
+BIN = BASE_DIR / "src/benchmark"
 RESULTS = BASE_DIR / "results"
 
 RESULTS.mkdir(exist_ok=True)
@@ -44,10 +44,10 @@ if modo == "cache":
     data = np.atleast_1d(data)
 
     tam_seq = np.array([r[2] for r in data if r[1] == "secuencial"], float)
-    lat_seq = np.array([r[6] for r in data if r[1] == "secuencial"], float)
+    lat_seq = np.array([r[4] for r in data if r[1] == "secuencial"], float)
 
     tam_salto = np.array([r[2] for r in data if r[1] == "saltos"], float)
-    lat_salto = np.array([r[6] for r in data if r[1] == "saltos"], float)
+    lat_salto = np.array([r[4] for r in data if r[1] == "saltos"], float)
 
     plt.figure(figsize=(10, 6))
     plt.plot(tam_seq, lat_seq, marker="o", label="Secuencial")

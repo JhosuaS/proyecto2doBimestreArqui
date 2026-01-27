@@ -1,3 +1,4 @@
+#!/bin/bash
 # Script generado por Gemini para lanzar benchmarks de disco y cache
 echo "========================================"
 echo "   Benchmark Project - Panel de Control"

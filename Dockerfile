@@ -15,6 +15,6 @@ COPY . /app/
 
 RUN make
 
-RUN dos2unix src/launcher.sh && chmod +x /app/launcher.sh
+RUN dos2unix src/launcher.sh && chmod +x src/launcher.sh
 
-CMD ["./src/launcher.sh"]
+CMD ["src/launcher.sh"]
